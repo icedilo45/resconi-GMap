@@ -8,7 +8,7 @@
     "scheme": "resconigmap",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/images/icon.png"
     },
     "android": {
       "adaptiveIcon": {
@@ -33,6 +33,18 @@
             "image": "./assets/images/splash-icon.png",
             "imageWidth": 76
           }
+        }
+      ],
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ]
     ],
