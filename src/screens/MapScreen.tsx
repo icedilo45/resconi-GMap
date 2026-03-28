@@ -1,20 +1,51 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Alert, Button } from "react-native";
+import { View, Alert, Button } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import MapView, { Marker, Polygon, Circle } from "react-native-maps";
-import { fetchPointSurveys, fetchPolygonSurveys, fetchCenterPointSurveys } from "../services/surveyServices";
-// import { saveLocalPoint, saveLocalPolygon, saveLocalCenterPoint } from "../storage/localStorage";
-import { syncSurveys } from "../services/surveyServices";
+import {
+  fetchPointSurveys,
+  fetchPolygonSurveys,
+  fetchCenterPointSurveys,
+  syncSurveys,
+} from "../services/surveyService";
+
+// Define types for clarity
+interface PointSurvey {
+  id: string;
+  latitude: number;
+  longitude: number;
+  notes?: string;
+}
+
+interface PolygonSurvey {
+  id: string;
+  coords: { latitude: number; longitude: number }[];
+  notes?: string;
+}
+
+interface CenterPointSurvey {
+  id: string;
+  latitude: number;
+  longitude: number;
+  spacing: number;
+  numTrees: number;
+  estimatedArea: number;
+}
+
 export default function MapScreen() {
   const navigation = useNavigation<any>();
-  const [points, setPoints] = useState<any[]>([]);
-  const [polygons, setPolygons] = useState<any[]>([]);
-  const [centerPoints, setCenterPoints] = useState<any[]>([]);
+  const [points, setPoints] = useState<PointSurvey[]>([]);
+  const [polygons, setPolygons] = useState<PolygonSurvey[]>([]);
+  const [centerPoints, setCenterPoints] = useState<CenterPointSurvey[]>([]);
 
   const loadData = async () => {
-    setPoints(await fetchPointSurveys());
-    setPolygons(await fetchPolygonSurveys());
-    setCenterPoints(await fetchCenterPointSurveys());
+    try {
+      setPoints(await fetchPointSurveys());
+      setPolygons(await fetchPolygonSurveys());
+      setCenterPoints(await fetchCenterPointSurveys());
+    } catch (err) {
+      console.error("Failed to load surveys:", err);
+    }
   };
 
   useEffect(() => {
@@ -42,14 +73,16 @@ export default function MapScreen() {
           longitudeDelta: 0.05,
         }}
       >
+        {/* Points */}
         {points.map((p) => (
           <Marker
             key={p.id}
-            coordinate={{ latitude: p.coords.latitude, longitude: p.coords.longitude }}
+            coordinate={{ latitude: p.latitude, longitude: p.longitude }}
             title={p.notes}
           />
         ))}
 
+        {/* Polygons */}
         {polygons.map((poly) => (
           <Polygon
             key={poly.id}
@@ -60,17 +93,18 @@ export default function MapScreen() {
           />
         ))}
 
+        {/* Center Points */}
         {centerPoints.map((c) => (
           <Circle
             key={c.id}
-            center={c.center}
+            center={{ latitude: c.latitude, longitude: c.longitude }}
             radius={Math.sqrt(c.estimatedArea / Math.PI)}
             strokeColor="blue"
             fillColor="rgba(0,0,255,0.2)"
           />
         ))}
       </MapView>
-      
+
       <Button title="View Surveys" onPress={() => navigation.navigate("SurveyList")} />
       <Button title="Sync Now" onPress={handleSync} />
     </View>
