@@ -1,12 +1,62 @@
 import axios from "axios";
 import { SurveyPoint, SurveyPolygon, CenterPointSurvey } from "@/utils/geo";
 import { getLocalPoints, getLocalPolygons, getLocalCenterPoints } from "../storage/localStorage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 const API_URL = "http://localhost:8000/api"; // change to your Django server URL
+const api = axios.create({
+  baseURL: API_URL,
+});
+
+// Attach access token to every request
+api.interceptors.request.use(async (config) => {
+  const token = await AsyncStorage.getItem("accessToken");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Handle expired tokens automatically
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+
+    // If 401 Unauthorized and we haven’t retried yet
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      try {
+        const refreshToken = await AsyncStorage.getItem("refreshToken");
+        if (!refreshToken) throw new Error("No refresh token stored");
+
+        // Request new access token
+        const res = await axios.post(`${API_URL}/token/refresh/`, {
+          refresh: refreshToken,
+        });
+
+        const newAccessToken = res.data.access;
+        await AsyncStorage.setItem("accessToken", newAccessToken);
+
+        // Update header and retry original request
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return api(originalRequest);
+      } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
+        // Optionally redirect to login
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);
+
 
 // --- Fetch Surveys ---
 export const fetchPointSurveys = async (): Promise<SurveyPoint[]> => {
-  const res = await axios.get(`${API_URL}/points/`);
+  const res = await api.get('/points/');
   return res.data.map((p: any) => ({
     id: p.id,
     coords: { latitude: p.latitude, longitude: p.longitude },
@@ -16,7 +66,7 @@ export const fetchPointSurveys = async (): Promise<SurveyPoint[]> => {
 };
 
 export const fetchPolygonSurveys = async (): Promise<SurveyPolygon[]> => {
-  const res = await axios.get(`${API_URL}/polygons/`);
+  const res = await api.get('/polygons/');
   return res.data.map((poly: any) => ({
     id: poly.id,
     coords: poly.coords, // already an array of { latitude, longitude }
@@ -25,7 +75,7 @@ export const fetchPolygonSurveys = async (): Promise<SurveyPolygon[]> => {
 };
 
 export const fetchCenterPointSurveys = async (): Promise<CenterPointSurvey[]> => {
-  const res = await axios.get(`${API_URL}/centerpoints/`);
+  const res = await api.get('/centerpoints/');
   return res.data.map((c: any) => ({
     id: c.id,
     center: { latitude: c.latitude, longitude: c.longitude },
@@ -38,7 +88,7 @@ export const fetchCenterPointSurveys = async (): Promise<CenterPointSurvey[]> =>
 
 // --- Save Surveys ---
 export const savePointSurvey = async (point: SurveyPoint) => {
-  await axios.post(`${API_URL}/points/`, {
+  await api.post('/points/', {
     id: point.id,
     latitude: point.coords.latitude,
     longitude: point.coords.longitude,
@@ -49,7 +99,7 @@ export const savePointSurvey = async (point: SurveyPoint) => {
 };
 
 export const savePolygonSurvey = async (polygon: SurveyPolygon) => {
-  await axios.post(`${API_URL}/polygons/`, {
+  await api.post('/polygons/', {
     id: polygon.id,
     coords: polygon.coords,
     notes: polygon.notes,
@@ -58,7 +108,7 @@ export const savePolygonSurvey = async (polygon: SurveyPolygon) => {
 };
 
 export const saveCenterPointSurvey = async (centerPoint: CenterPointSurvey) => {
-  await axios.post(`${API_URL}/centerpoints/`, {
+  await api.post('/centerpoints/', {
     id: centerPoint.id,
     latitude: centerPoint.center.latitude,
     longitude: centerPoint.center.longitude,
@@ -103,7 +153,7 @@ export const uploadPhoto = async (uri: string, id: string) => {
     name: `${id}.jpg`,
   } as any);
 
-  await axios.post(`${API_URL}/upload-photo/`, formData, {
+  await api.post('/upload-photo/', formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
