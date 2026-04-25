@@ -1,11 +1,15 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import axios from 'axios';
+
+// Use your computer's IP address, not 'localhost', for Android Emulators
+const BASE_IP = "192.168.56.1";
+const API_URL = `http://${BASE_IP}:8000/api`; 
+
+export const login = async (username: string, password: string) => {
+  const response = await axios.post(`${API_URL}/token/`, { username, password });
+  // Django Simple JWT returns 'access' and 'refresh' tokens
+  return response.data; 
+};
 
 export const logout = async () => {
-  try {
-    await AsyncStorage.removeItem("accessToken");
-    await AsyncStorage.removeItem("refreshToken");
-    console.log("Logged out successfully");
-  } catch (err) {
-    console.error("Logout failed:", err);
-  }
+  await axios.post(`${API_URL}/token/logout/`); 
 };

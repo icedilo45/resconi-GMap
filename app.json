@@ -1,16 +1,19 @@
 {
   "expo": {
     "name": "resconi-GMap",
-    "slug": "resconi-GMap",
+    "slug": "resconi-gmap",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "resconigmap",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "bundleIdentifier": "com.resconi.geomap",
+      "supportsTablet": true,
+      "icon": "./assets/images/icon.png"
     },
     "android": {
+      "package": "com.resconi.geomap",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -20,11 +23,11 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "output": "static",
+      "output": "single",
+      "bundler": "metro",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
       [
         "expo-splash-screen",
         {
@@ -35,11 +38,18 @@
           }
         }
       ],
-      "expo-image"
+      "expo-image",
+      "expo-web-browser"
     ],
     "experiments": {
-      "typedRoutes": true,
+      "typedRoutes": false,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "445f616c-aa2c-4e5f-a340-20a41fd85f71"
+      }
+    },
+    "owner": "icedilo45"
   }
 }
