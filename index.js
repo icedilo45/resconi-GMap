@@ -1,4 +1,4 @@
 import { registerRootComponent } from 'expo';
-import App from './App'; // This will resolve App.tsx automatically
+import App from './App';
 
 registerRootComponent(App);

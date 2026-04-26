@@ -3,9 +3,9 @@ import { View, TextInput, Button, Alert, StyleSheet } from "react-native";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { AuthContext } from "@/services/authContext";
+import { API_BASE_URL_DEV } from '@env';
 
-const BASE_IP = "192.168.56.1";
-const API_URL = `http://${BASE_IP}:8000/api`;
+
 
 export default function LoginScreen() {
   const navigation = useNavigation<any>();
@@ -16,7 +16,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const { data} = await axios.post(`${API_URL}/token/`, {
+      const { data} = await axios.post(`${API_BASE_URL_DEV}/token/`, {
         username,
         password,
       },
