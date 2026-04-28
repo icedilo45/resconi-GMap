@@ -1,20 +1,14 @@
 import React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
-import MapScreen from "@/navigation/screens/LoginScreen";
-import SurveyListScreen from "@/navigation/screens/SurveyListScreen";
-import { navigationRef } from "@/navigationRef";
-
-
-const Stack = createStackNavigator();
+import { AuthProvider } from "@/services/authContext";
+import AppNavigator from "@/AppNavigator";
+import { SurveyProvider } from "@/services/surveyContext";
 
 export default function App() {
   return (
-    <NavigationContainer ref={navigationRef}>
-      <Stack.Navigator initialRouteName="Map">
-        <Stack.Screen name="Map" component={MapScreen} />
-        <Stack.Screen name="Surveys" component={SurveyListScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AuthProvider>
+      <SurveyProvider>
+        <AppNavigator />
+      </SurveyProvider>
+    </AuthProvider>
   );
 }
