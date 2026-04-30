@@ -7,6 +7,7 @@ import {
 } from "@/services/surveyService";
 import { SurveyPoint, SurveyPolygon, CenterPointSurvey } from "@/utils/geo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type EditSurveyScreenProps = {
   route: {
@@ -63,7 +64,7 @@ export default function EditSurveyScreen({ route, navigation }: EditSurveyScreen
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <TextInput
         style={styles.input}
         value={notes}
@@ -71,7 +72,7 @@ export default function EditSurveyScreen({ route, navigation }: EditSurveyScreen
         placeholder="Edit notes"
       />
       <Button title="Save Changes" onPress={handleUpdate} />
-    </View>
+    </SafeAreaView>
   );
 }
 

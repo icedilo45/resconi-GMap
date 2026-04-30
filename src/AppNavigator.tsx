@@ -6,7 +6,7 @@ import LoginScreen from "@/screens/LoginScreen";
 import MapScreen from "@/screens/MapScreen";
 import React from "react";
 import SurveyCreateScreen from "./screens/SurveyCreateScreen";
-import { SafeAreaView } from "react-native-safe-area-context";
+// import { SafeAreaView } from "react-native-safe-area-context";
 import { center } from "@turf/turf";
 
 const Stack = createStackNavigator();
@@ -15,7 +15,6 @@ export default function AppNavigator() {
   const { user, loading } = useAuth();
 
   return (
-    <SafeAreaView style={styles.area}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           {loading ? (
@@ -28,7 +27,6 @@ export default function AppNavigator() {
           <Stack.Screen name="CreateSurvey" component={SurveyCreateScreen} />
         </Stack.Navigator>
       </NavigationContainer>
-    </SafeAreaView>
   );
 }
 

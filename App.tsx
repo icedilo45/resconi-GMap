@@ -1,6 +1,6 @@
 import React from "react";
 import { AuthProvider } from "@/services/authContext";
-import AppNavigator from "@/AppNavigator";
+import AppNavigator from "././src/AppNavigator";
 import { SurveyProvider } from "@/services/surveyContext";
 
 export default function App() {

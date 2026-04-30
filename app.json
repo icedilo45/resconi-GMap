@@ -4,28 +4,28 @@
     "slug": "resconi-gmap",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/icons/resconi.png",
     "scheme": "resconigmap",
     "userInterfaceStyle": "automatic",
     "ios": {
       "bundleIdentifier": "com.resconi.geomap",
       "supportsTablet": true,
-      "icon": "./assets/images/icon.png"
+      "icon": "./assets/icons/resconi.png"
     },
     "android": {
       "package": "com.resconi.geomap",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
-        "foregroundImage": "./assets/images/android-icon-foreground.png",
-        "backgroundImage": "./assets/images/android-icon-background.png",
-        "monochromeImage": "./assets/images/android-icon-monochrome.png"
+        "foregroundImage": "./assets/icons/appCare.png",
+        "backgroundImage": "./assets/icons/appCare.png",
+        "monochromeImage": "./assets/icons/appCare.png"
       },
       "predictiveBackGestureEnabled": false
     },
     "web": {
       "output": "single",
       "bundler": "metro",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/icons/resconi.png"
     },
     "plugins": [
       [
@@ -33,7 +33,7 @@
         {
           "backgroundColor": "#208AEF",
           "android": {
-            "image": "./assets/images/splash-icon.png",
+            "image": "./assets/images/resconi.png",
             "imageWidth": 76
           }
         }

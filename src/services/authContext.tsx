@@ -34,7 +34,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (access: string, refresh: string) => {
     await AsyncStorage.setItem("access", access);
     await AsyncStorage.setItem("refresh", refresh);
-    setUser(access);
+    setUser({ access, refresh } as unknown as string); // store access token in state
   };
 
   const logout = async () => {

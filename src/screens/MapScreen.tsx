@@ -24,7 +24,7 @@ export default function MapScreen() {
           <Marker
             key={`point-${p.id}`}
             coordinate={{ latitude: p.latitude, longitude: p.longitude }}
-            image={require("@/assets/icons/tree.png")}
+            image={require("../../assets/images/tree.png")}
           >
             <Callout tooltip>
               <View style={styles.callout}>
@@ -56,7 +56,7 @@ export default function MapScreen() {
           <Marker
             key={`center-${c.id}`}
             coordinate={{ latitude: c.latitude, longitude: c.longitude }}
-            image={require("@/assets/icons/center.png")}
+            image={require("../../assets/icons/circle.png")}
           >
             <Callout tooltip>
               <View style={styles.callout}>
